@@ -4,6 +4,9 @@ const logger = require('./logger');
 const Joi = require('joi');
 const express = require('express');
 const config = require('config');
+// export DEBUG=app:startup,app:db -> OR export DEBUG=app:* -> OR without env vars DEBUG=app:db nodemon index.js
+const debug = require('debug')('app:startup'); //returns a function, we call it and give it and arg which is namespace for debugging
+const dbDebugger = require('debug')('app:db');
 
 const app = express();
 
@@ -21,8 +24,11 @@ console.log(`Mail server pass : ${config.get('mail.password')}`);
 
 if (app.get('env') === 'development') {
     app.use(morgan('tiny'));
-    console.log('Morgan enabled')
+    //console.log('Morgan enabled') -> replace with a call to debug fn
+    debug('Morgan enabled');
 }
+//Db work
+//dbDebugger('Conneted to the Database');
 
 app.use(logger);
 
