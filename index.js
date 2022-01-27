@@ -10,6 +10,9 @@ const dbDebugger = require('debug')('app:db');
 
 const app = express();
 
+app.set('view engine', 'pug'); // no need to require, express with understand
+app.set('views', './views'); // default
+
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -39,6 +42,13 @@ const genres = [
     {id: 2, name: 'Action'},
     {id: 3, name: 'Drama'}
 ];
+
+app.get('/', (req, res) => {
+    res.render('index', {
+        title: 'Movies',
+        message: 'Lets watch a movie'
+    })
+});
 
 app.get('/api/genres', (req, res) => {
     res.send(genres);
