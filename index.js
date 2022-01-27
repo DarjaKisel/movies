@@ -1,9 +1,31 @@
+const morgan = require('morgan');
+const helmet = require('helmet');
+const logger = require('./logger');
 const Joi = require('joi');
 const express = require('express');
+const config = require('config');
+
 const app = express();
+
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
+app.use(express.static('public'));
+app.use(helmet());
+
+//Configuration
+console.log(`Application name : ${config.get('name')}`);
+console.log(`Mail server : ${config.get('mail.host')}`);
+console.log(`Mail server pass : ${config.get('mail.password')}`);
+
+if (app.get('env') === 'development') {
+    app.use(morgan('tiny'));
+    console.log('Morgan enabled')
+}
+
+app.use(logger);
+
 app.listen(port, () => console.log(`Listening on port ${port}....`));
 
 const genres = [
